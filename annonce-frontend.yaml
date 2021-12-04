@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-dzannonce-deployment
+spec:
+  selector:
+    matchLabels:
+      app: frontend-dzannonce
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: frontend-dzannonce
+    spec:
+      containers:
+        - name: frontend
+          image: 210286/dzannonce-frontend:latest
+          volumeMounts:
+            #override config.js file
+            - name: config
+              mountPath: "/usr/share/nginx/html/config.js"
+              subPath: "config.js"
+      terminationGracePeriodSeconds: 10
+      volumes:
+        - name: config
+          configMap:
+            name: web-config
+            items:
+              - key: "web.properties"
+                path: "config.js"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-dzannonce-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: frontend-dzannonce
+  ports:
+    - port: 80
+      protocol: TCP
+      # targetPort: 80
+      # nodePort: 30014
+      # name: frontend-dzannonce
+

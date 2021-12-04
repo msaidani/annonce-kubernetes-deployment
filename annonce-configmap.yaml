@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-config
+data:
+  web.properties: |
+    const API_URL = 'http://34.136.52.63:3003/'
+

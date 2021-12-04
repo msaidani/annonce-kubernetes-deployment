@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-dzannonce-deployment
+spec:
+  selector:
+    matchLabels:
+      app: backend-dzannonce
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: backend-dzannonce
+    spec:
+      containers:
+        - name: backtend
+          image: 210286/dzannonce-backend:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-dzannonce-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: backend-dzannonce
+  ports:
+    - port: 3003
+      protocol: TCP
+      # targetPort: 3003
+      # nodePort: 30012
+      # name: elastic-np
+

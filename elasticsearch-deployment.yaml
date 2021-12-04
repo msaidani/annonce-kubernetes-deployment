@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch-deployment
+spec:
+  selector:
+    matchLabels:
+      app: elasticsearch-single-node
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: elasticsearch-single-node
+    spec:
+      containers:
+        - name: elasticsearch1
+          image: docker.elastic.co/elasticsearch/elasticsearch:7.8.1
+          #command: ["chown", "-R", "1000:1000", "/usr/share/elasticsearch/data"]
+          env:
+            - name: CLUSTER_NAME
+              value: "escluster"
+            - name: NODE_DATA
+              value: "false"
+            - name: NODE_INGEST
+              value: "false"
+            - name: NODE_MASTER
+              value: "false"
+            - name: ES_JAVA_OPTS
+              value: "-Xms512m -Xmx512m"
+            - name: DISCOVERY_SERVICE
+              value: elasticsearch-discovery
+            - name: PROCESSORS
+              valueFrom:
+                resourceFieldRef:
+                  resource: limits.cpu
+            - name: discovery.type
+              value: single-node
+            - name: xpack.security.enabled
+              value: "false"
+          volumeMounts:
+            - name: elasticsearch1-persistent-storage
+              mountPath: /usr/share/elasticsearch/data
+              readOnly: false
+      volumes:
+        - name: elasticsearch1-persistent-storage
+          persistentVolumeClaim:
+            claimName: app-storage-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch
+spec:
+  type: LoadBalancer
+  selector:
+    app: elasticsearch-single-node
+  ports:
+    - port: 9200
+      protocol: TCP
+      # targetPort: 9200
+      # nodePort: 30201
+
