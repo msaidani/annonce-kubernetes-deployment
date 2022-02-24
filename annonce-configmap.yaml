@@ -4,5 +4,4 @@ metadata:
   name: web-config
 data:
   web.properties: |
-    const API_URL = 'http://34.136.52.63:3003/'
-
+    const API_URL = 'http://104.197.64.199:3003/'

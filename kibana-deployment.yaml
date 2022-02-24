@@ -21,9 +21,9 @@ spec:
             - name: SERVER_NAME
               value: "localhost"
             - name: ELASTICSEARCH_HOSTS
-              value: "http://35.222.152.101:9200"
+              value: "http://elasticsearch:9200"
             - name: ELASTICSEARCH_URL
-              value: "http://35.222.152.101:9200"
+              value: "http://elasticsearch:9200"
               # valueFrom:
               #   configMapKeyRef:
               #     name: elasticsearch-connection-configmap
